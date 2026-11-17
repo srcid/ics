@@ -1,0 +1,53 @@
+[project]
+name = "ics"
+version = "0.0.1"
+description = "ics is a cli tool for creating ics files"
+readme = "README.md"
+authors = [
+    { name = "Alcides Ribeiro", email = "me@alcides.dev.br" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "click>=8.5.1",
+]
+
+[project.scripts]
+ics = "ics.cli:cli"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "isort>=9.0.2",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+    "taskipy>=1.14.1",
+]
+
+[tool.isort]
+profile = "black"
+line_length = 79
+src_paths = ["src", "tests"]
+known_first_party = ["ics"]
+
+[tool.ruff]
+line-length = 79
+indent-width = 2
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.taskipy.tasks]
+format = { cmd = "isort src tests && ruff format src tests", help = "sort imports and format the code" }
+isort = { cmd = "isort --check-only --diff src tests", help = "check import order" }
+ruff = { cmd = "ruff check src tests", help = "check formatting" }
+lint = { cmd = "task isort && task ruff", help = "run every static check" }
+test = { cmd = "pytest", help = "run the test suite" }
+cov = { cmd = "pytest --cov=ics_cli --cov-report=term-missing", help = "tests with coverage" }
