@@ -20,33 +20,33 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "isort>=9.0.2",
     "pytest>=9.2.0",
     "ruff>=0.17.5",
     "taskipy>=1.14.1",
 ]
 
-[tool.isort]
-profile = "black"
-line_length = 79
-src_paths = ["src", "tests"]
-known_first_party = ["ics"]
-
 [tool.ruff]
+src = ["src", "tests"]
 line-length = 79
 indent-width = 2
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
+
+[tool.ruff.lint.isort]
+known-first-party = ["ics"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.taskipy.tasks]
-format = { cmd = "isort src tests && ruff format src tests", help = "sort imports and format the code" }
-isort = { cmd = "isort --check-only --diff src tests", help = "check import order" }
+format = { cmd = "ruff check --select I --fix src tests && ruff format src tests", help = "sort imports and format the code" }
+isort = { cmd = "ruff check --select I src tests", help = "check import order" }
 ruff = { cmd = "ruff check src tests", help = "check formatting" }
 lint = { cmd = "task isort && task ruff", help = "run every static check" }
 test = { cmd = "pytest", help = "run the test suite" }
